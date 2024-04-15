@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://bmwq7116brug0"]
+
+[ext_resource type="Script" path="res://game/objects/Cards/Base/CardPos.cs" id="1_rei67"]
+[ext_resource type="PackedScene" uid="uid://io7gx32ahex8" path="res://game/objects/Cards/Base/card_hint.tscn" id="2_5e2r7"]
+[ext_resource type="PackedScene" uid="uid://6gabb4y2mhkh" path="res://game/objects/Cards/Base/CardStaticBody.tscn" id="2_82p0f"]
+[ext_resource type="PackedScene" uid="uid://bo8ylxdh5heua" path="res://game/objects/Cards/yaminomegami/card_tumbling_shot.tscn" id="3_nqedh"]
+
+[node name="CardPos" type="Node3D" node_paths=PackedStringArray("cardHintRef", "cardsRef")]
+script = ExtResource("1_rei67")
+cardHintRef = NodePath("CardHint")
+cardsRef = []
+
+[node name="StaticBody3D" parent="." node_paths=PackedStringArray("objRef") instance=ExtResource("2_82p0f")]
+collision_layer = 512
+objRef = NodePath("..")
+
+[node name="CardHint" parent="." instance=ExtResource("2_5e2r7")]
+visible = false
+
+[node name="Card_TumblingShot" parent="." instance=ExtResource("3_nqedh")]

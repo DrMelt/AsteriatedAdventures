@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://bn5jrl3j6y7"]
+
+[ext_resource type="Script" path="res://game/objects/Panels/CenterPanel.cs" id="1_ciadj"]
+[ext_resource type="PackedScene" uid="uid://bmwq7116brug0" path="res://game/objects/Cards/Base/CardPos.tscn" id="2_k5kcg"]
+[ext_resource type="Texture2D" uid="uid://07nenypthq3t" path="res://game/objects/Panels/Textures/centerPanel.png" id="2_ucnpp"]
+
+[node name="Panel" type="Node3D" node_paths=PackedStringArray("cardPosRef")]
+script = ExtResource("1_ciadj")
+cardPosRef = [NodePath("CardPos/Red/Pos1"), NodePath("CardPos/Red/Pos2"), NodePath("CardPos/Red/Pos3"), NodePath("CardPos/Blue/Pos1"), NodePath("CardPos/Blue/Pos2"), NodePath("CardPos/Blue/Pos3")]
+
+[node name="PanelSprite" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0149522, 0, -0.000256787)
+pixel_size = 0.0004
+texture = ExtResource("2_ucnpp")
+
+[node name="CardPos" type="Node3D" parent="."]
+
+[node name="Red" type="Node3D" parent="CardPos"]
+
+[node name="Pos1" parent="CardPos/Red" instance=ExtResource("2_k5kcg")]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, -0.142792, 0.0583292, 0)
+
+[node name="Pos2" parent="CardPos/Red" instance=ExtResource("2_k5kcg")]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0.000134408, 0.0583292, 0)
+
+[node name="Pos3" parent="CardPos/Red" instance=ExtResource("2_k5kcg")]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0.142472, 0.0583292, 0)
+
+[node name="Blue" type="Node3D" parent="CardPos"]
+
+[node name="Pos1" parent="CardPos/Blue" instance=ExtResource("2_k5kcg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.142511, -0.0583024, 0)
+
+[node name="Pos2" parent="CardPos/Blue" instance=ExtResource("2_k5kcg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000192419, -0.0583024, 0)
+
+[node name="Pos3" parent="CardPos/Blue" instance=ExtResource("2_k5kcg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.142472, -0.0583024, 0)

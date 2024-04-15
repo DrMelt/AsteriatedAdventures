@@ -1,0 +1,164 @@
+[gd_scene load_steps=15 format=3 uid="uid://bd1nq2yfknqae"]
+
+[ext_resource type="Script" path="res://game/scenes/game_scene/GameControl.cs" id="1_1ayof"]
+[ext_resource type="PackedScene" uid="uid://cq3sk8v5s4o0l" path="res://game/objects/UI/counter.tscn" id="1_3cnxy"]
+[ext_resource type="PackedScene" uid="uid://bn5jrl3j6y7" path="res://game/objects/Panels/panel.tscn" id="1_outbx"]
+[ext_resource type="Script" path="res://game/scenes/game_scene/GameManager.cs" id="1_ovr5c"]
+[ext_resource type="Script" path="res://game/scenes/game_scene/PlayerData.cs" id="3_d2dx8"]
+[ext_resource type="PackedScene" uid="uid://dmybs7v131url" path="res://game/objects/HandCards/hand_cards.tscn" id="3_i3dfh"]
+[ext_resource type="Texture2D" uid="uid://23gvbgsfucd3" path="res://game/objects/Panels/Textures/redReS.png" id="5_epex1"]
+[ext_resource type="PackedScene" uid="uid://80x82mpy2fr4" path="res://game/objects/Panels/re_panel.tscn" id="5_w6eol"]
+[ext_resource type="PackedScene" uid="uid://bmwq7116brug0" path="res://game/objects/Cards/Base/CardPos.tscn" id="6_qw3sk"]
+[ext_resource type="Texture2D" uid="uid://gnvdn6hvxfes" path="res://game/objects/UI/Textures/Fragment4_back.png" id="8_nf6sj"]
+[ext_resource type="Theme" uid="uid://df6gcfrh57a7v" path="res://game/objects/UI/ui_theme.tres" id="9_1g66k"]
+[ext_resource type="Script" path="res://game/objects/UI/ShowDeckNum.cs" id="10_menw8"]
+[ext_resource type="Script" path="res://game/objects/UI/FragmentsNumCounter.cs" id="12_32dk5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5y81f"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[node name="GameScene" type="Node3D"]
+
+[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("playersRef", "decksRef")]
+script = ExtResource("1_ovr5c")
+playersRef = [NodePath("../Players/PlayerData1"), NodePath("../Players/PlayerData2")]
+decksRef = [NodePath("../Decks/Deck1"), NodePath("../Decks/Deck2")]
+
+[node name="Players" type="Node" parent="."]
+
+[node name="PlayerData1" type="Node" parent="Players"]
+script = ExtResource("3_d2dx8")
+
+[node name="PlayerData2" type="Node" parent="Players"]
+script = ExtResource("3_d2dx8")
+
+[node name="GameControl" type="Node" parent="." node_paths=PackedStringArray("rayCastRef")]
+script = ExtResource("1_1ayof")
+rayCastRef = NodePath("../Camera3D/RayCast3D")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+keep_aspect = 0
+fov = 60.0
+near = 0.005
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
+enabled = false
+target_position = Vector3(0, 0, -1)
+collision_mask = 768
+
+[node name="Background" type="Node3D" parent="."]
+
+[node name="Center" type="Node3D" parent="."]
+
+[node name="RePanel1" parent="Center" instance=ExtResource("5_w6eol")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2838, -0.200196, -0.745391)
+
+[node name="RePanel2" parent="Center" instance=ExtResource("5_w6eol")]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0.284, 0.2, -0.745)
+
+[node name="Sprite3D" parent="Center/RePanel2" index="0"]
+texture = ExtResource("5_epex1")
+
+[node name="Panel" parent="Center" instance=ExtResource("1_outbx")]
+process_physics_priority = 1
+transform = Transform3D(0.93, 0, 0, 0, 0.93, 0, 0, 0, 0.93, 0, 0, -0.746889)
+
+[node name="Hands" type="Node3D" parent="."]
+
+[node name="HandCards1" parent="Hands" instance=ExtResource("3_i3dfh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.67054, -0.55)
+radius = 0.5
+intervalRadian = 0.08
+
+[node name="HandCards2" parent="Hands" instance=ExtResource("3_i3dfh")]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.671, -0.55)
+radius = 0.5
+intervalRadian = 0.08
+
+[node name="Decks" type="Node3D" parent="."]
+
+[node name="Deck1" parent="Decks" instance=ExtResource("6_qw3sk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.360226, -0.0584329, -0.753081)
+
+[node name="Deck2" parent="Decks" instance=ExtResource("6_qw3sk")]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0.360684, 0.058, -0.753)
+
+[node name="Game" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Back" type="Panel" parent="Game"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5y81f")
+
+[node name="DecksCounter" type="Control" parent="Game/Back"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Counter1" type="Label" parent="Game/Back/DecksCounter"]
+layout_mode = 0
+offset_left = 981.0
+offset_top = 383.0
+offset_right = 1021.0
+offset_bottom = 425.0
+theme = ExtResource("9_1g66k")
+theme_override_font_sizes/font_size = 30
+text = "0"
+script = ExtResource("10_menw8")
+
+[node name="Counter2" type="Label" parent="Game/Back/DecksCounter"]
+layout_mode = 0
+offset_left = 981.0
+offset_top = 229.0
+offset_right = 1021.0
+offset_bottom = 271.0
+theme = ExtResource("9_1g66k")
+theme_override_font_sizes/font_size = 30
+text = "0"
+script = ExtResource("10_menw8")
+deckInd = 1
+
+[node name="FragmentCounter" type="Control" parent="Game/Back"]
+anchors_preset = 0
+offset_left = 169.0
+offset_top = 258.0
+offset_right = 209.0
+offset_bottom = 298.0
+
+[node name="TextureRect" type="TextureRect" parent="Game/Back/FragmentCounter"]
+layout_mode = 0
+offset_left = -11.0
+offset_top = -8.0
+offset_right = 47.0
+offset_bottom = 78.0
+texture = ExtResource("8_nf6sj")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="Game/Back/FragmentCounter"]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 20.0
+offset_right = 92.0
+offset_bottom = 43.0
+theme = ExtResource("9_1g66k")
+theme_override_font_sizes/font_size = 20
+text = "30"
+script = ExtResource("12_32dk5")
+
+[node name="CounterArea1" parent="Game/Back" instance=ExtResource("1_3cnxy")]
+offset_top = 436.0
+offset_bottom = 476.0
+
+[node name="CounterArea2" parent="Game/Back" instance=ExtResource("1_3cnxy")]
+
+[editable path="Center/RePanel2"]

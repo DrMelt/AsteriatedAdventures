@@ -1,0 +1,26 @@
+[remap]
+
+importer="2d_array_texture"
+type="CompressedTexture2DArray"
+uid="uid://bcccciawtvxll"
+path="res://.godot/imported/desk_face_yaminomegami.png-43e1e6335f3b7efab7d6af07cf3a033e.ctexarray"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://game/objects/Cards/yaminomegami/Textures/desk_face_yaminomegami.png"
+dest_files=["res://.godot/imported/desk_face_yaminomegami.png-43e1e6335f3b7efab7d6af07cf3a033e.ctexarray"]
+
+[params]
+
+compress/mode=3
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/channel_pack=0
+mipmaps/generate=false
+mipmaps/limit=-1
+slices/horizontal=5
+slices/vertical=7

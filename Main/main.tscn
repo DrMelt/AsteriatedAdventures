@@ -1,0 +1,67 @@
+[gd_scene load_steps=5 format=3 uid="uid://cap6tgleg0r67"]
+
+[ext_resource type="Script" path="res://Main/Rooms.cs" id="1_f2bwp"]
+[ext_resource type="Script" path="res://Main/HostInfo.cs" id="1_r85jq"]
+[ext_resource type="Theme" uid="uid://df6gcfrh57a7v" path="res://game/objects/UI/ui_theme.tres" id="2_pcws4"]
+[ext_resource type="PackedScene" uid="uid://bd1nq2yfknqae" path="res://game/scenes/game_scene/game_scene.tscn" id="3_ew50r"]
+
+[node name="Main" type="Node3D"]
+
+[node name="Net" type="Node" parent="."]
+
+[node name="Rooms" type="Node" parent="Net"]
+script = ExtResource("1_f2bwp")
+
+[node name="HostInfo" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_r85jq")
+
+[node name="Games" type="Node" parent="."]
+
+[node name="GameRoom_0" parent="Games" instance=ExtResource("3_ew50r")]
+
+[node name="UI" type="Node" parent="."]
+
+[node name="MainUI" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="UI/MainUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ConnectButton" type="Button" parent="UI/MainUI/Panel"]
+layout_mode = 0
+offset_left = 470.0
+offset_top = 252.0
+offset_right = 640.0
+offset_bottom = 286.0
+theme = ExtResource("2_pcws4")
+theme_override_font_sizes/font_size = 18
+text = "Connect to server"
+
+[node name="CreateButton" type="Button" parent="UI/MainUI/Panel"]
+layout_mode = 0
+offset_left = 470.0
+offset_top = 318.0
+offset_right = 642.0
+offset_bottom = 352.0
+theme = ExtResource("2_pcws4")
+theme_override_font_sizes/font_size = 18
+text = "Create a server"
+
+[node name="RoomUI" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

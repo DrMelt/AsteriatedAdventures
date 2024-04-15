@@ -1,0 +1,56 @@
+[gd_scene load_steps=10 format=3 uid="uid://b5rnqyugvjrwl"]
+
+[ext_resource type="PackedScene" uid="uid://ca7tocfo3nsxq" path="res://game/objects/Cards/Base/CardModel.glb" id="1_fwx8q"]
+[ext_resource type="Script" path="res://game/objects/Cards/Base/CardBase.cs" id="2_ornst"]
+[ext_resource type="Shader" uid="uid://oysevxjw1kp6" path="res://game/objects/Cards/Base/card_texture_array_shader.tres" id="3_laq26"]
+[ext_resource type="PackedScene" uid="uid://io7gx32ahex8" path="res://game/objects/Cards/Base/card_hint.tscn" id="3_wfyiq"]
+[ext_resource type="PackedScene" uid="uid://6gabb4y2mhkh" path="res://game/objects/Cards/Base/CardStaticBody.tscn" id="4_bmie2"]
+[ext_resource type="Shader" uid="uid://d1r1yqrv5pkvi" path="res://game/objects/Cards/Base/CardPosHint.tres" id="5_fx0uj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fbahr"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("5_fx0uj")
+shader_parameter/Offset = 1.06
+shader_parameter/EdgeWidth = 0.05
+shader_parameter/ColorParameter = Color(0.909804, 0.827451, 0.701961, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_67uld"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("3_laq26")
+shader_parameter/ID = null
+shader_parameter/Gamma = 2.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bdmui"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("3_laq26")
+shader_parameter/ID = null
+shader_parameter/Gamma = 2.2
+
+[node name="CardBase" node_paths=PackedStringArray("cardHintRef", "cardHintInRange") instance=ExtResource("1_fwx8q")]
+script = ExtResource("2_ornst")
+cardHintRef = NodePath("CardHint")
+cardHintInRange = NodePath("CardHintInRange")
+
+[node name="StaticBody3D" parent="." index="0" node_paths=PackedStringArray("objRef") instance=ExtResource("4_bmie2")]
+objRef = NodePath("..")
+
+[node name="CardHint" parent="." index="1" instance=ExtResource("3_wfyiq")]
+visible = false
+
+[node name="CardHintInRange" parent="." index="2" instance=ExtResource("3_wfyiq")]
+visible = false
+
+[node name="Card_l_face" parent="CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_fbahr")
+
+[node name="Card_l_face" parent="." index="4"]
+material_override = SubResource("ShaderMaterial_67uld")
+
+[node name="Card_l_back" parent="." index="5"]
+material_override = SubResource("ShaderMaterial_bdmui")
+
+[editable path="CardHintInRange"]
+[editable path="CardHintInRange/HintModel"]

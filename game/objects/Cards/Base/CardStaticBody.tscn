@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://6gabb4y2mhkh"]
+
+[ext_resource type="Script" path="res://game/objects/Cards/Base/CardStaticBody.cs" id="1_phuot"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mbkp4"]
+size = Vector3(0.063, 0.088, 0.001)
+
+[node name="StaticBody3D" type="StaticBody3D"]
+collision_layer = 1024
+collision_mask = 0
+input_ray_pickable = false
+script = ExtResource("1_phuot")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_mbkp4")
