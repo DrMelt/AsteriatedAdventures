@@ -1,0 +1,1656 @@
+[gd_scene load_steps=76 format=3 uid="uid://drp3n4uby60ft"]
+
+[ext_resource type="PackedScene" uid="uid://bmwq7116brug0" path="res://game/objects/Cards/Base/CardPos.tscn" id="1_8s7xj"]
+[ext_resource type="PackedScene" uid="uid://bo8ylxdh5heua" path="res://game/objects/Cards/yaminomegami/Cards/card_yaminomegami.tscn" id="2_1xsf4"]
+[ext_resource type="Shader" uid="uid://d1r1yqrv5pkvi" path="res://game/objects/Cards/Base/CardPosHint.tres" id="3_locon"]
+[ext_resource type="CompressedTexture2DArray" uid="uid://bcccciawtvxll" path="res://game/objects/Cards/yaminomegami/Textures/desk_face_yaminomegami.png" id="4_6u6wa"]
+[ext_resource type="CompressedTexture2DArray" uid="uid://cvgccrsut7gs4" path="res://game/objects/Cards/yaminomegami/Textures/desk_back_yaminomegami.png" id="5_e2xtx"]
+[ext_resource type="Script" path="res://game/objects/Cards/yaminomegami/Effects/CardEffect_TumblingShot1.cs" id="6_t61qx"]
+[ext_resource type="Script" path="res://game/objects/Cards/yaminomegami/Effects/CardEffect_TumblingShot2.cs" id="7_r56b0"]
+[ext_resource type="Script" path="res://game/objects/Cards/yaminomegami/Effects/CardEffect_ThroughShot.cs" id="8_p1ovx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_57eqn"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("3_locon")
+shader_parameter/Offset = 0.001
+shader_parameter/EdgeWidth = 0.05
+shader_parameter/ColorParameter = Color(0.890196, 0.890196, 0.890196, 1)
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_xeeym"]
+parameter_name = "Gamma"
+default_value_enabled = true
+default_value = 2.2
+
+[sub_resource type="VisualShaderNodeTexture2DArray" id="VisualShaderNodeTexture2DArray_kk4if"]
+source = 1
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_2kmjk"]
+
+[sub_resource type="VisualShaderNodeTexture2DArrayParameter" id="VisualShaderNodeTexture2DArrayParameter_kge7y"]
+parameter_name = "Texture2DArrayParameter"
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_m3uhn"]
+expanded_output_ports = [0]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeVectorCompose" id="VisualShaderNodeVectorCompose_rpli1"]
+
+[sub_resource type="VisualShaderNodeUIntParameter" id="VisualShaderNodeUIntParameter_msuk3"]
+parameter_name = "ID"
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_qpxtr"]
+default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(2.2, 2.2, 2.2)]
+operator = 5
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_om18q"]
+
+[sub_resource type="VisualShader" id="VisualShader_f5wfg"]
+resource_local_to_scene = true
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform uint ID;
+uniform sampler2DArray Texture2DArrayParameter;
+uniform float Gamma = 2.20000004768372;
+
+
+
+void fragment() {
+// FloatConstant:4
+	float n_out4p0 = 0.000000;
+
+
+// Input:6
+	vec2 n_out6p0 = UV;
+	float n_out6p1 = n_out6p0.r;
+	float n_out6p2 = n_out6p0.g;
+
+
+// UIntParameter:8
+	uint n_out8p0 = ID;
+
+
+// VectorCompose:7
+	vec3 n_out7p0 = vec3(n_out6p1, n_out6p2, float(n_out8p0));
+
+
+	vec4 n_out2p0;
+// Texture2DArray:2
+	n_out2p0 = texture(Texture2DArrayParameter, n_out7p0);
+
+
+// FloatParameter:10
+	float n_out10p0 = Gamma;
+
+
+// VectorOp:9
+	vec3 n_out9p0 = pow(vec3(n_out2p0.xyz), vec3(n_out10p0));
+
+
+// Output:0
+	ALBEDO = vec3(n_out4p0);
+	METALLIC = n_out4p0;
+	ROUGHNESS = n_out4p0;
+	SPECULAR = n_out4p0;
+	EMISSION = n_out9p0;
+
+
+}
+
+void light() {
+// FloatConstant:2
+	float n_out2p0 = 0.000000;
+
+
+// Output:0
+	DIFFUSE_LIGHT = vec3(n_out2p0);
+	SPECULAR_LIGHT = vec3(n_out2p0);
+
+
+}
+"
+nodes/fragment/0/position = Vector2(680, 140)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DArray_kk4if")
+nodes/fragment/2/position = Vector2(60, 240)
+nodes/fragment/4/node = SubResource("VisualShaderNodeFloatConstant_2kmjk")
+nodes/fragment/4/position = Vector2(60, 140)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture2DArrayParameter_kge7y")
+nodes/fragment/5/position = Vector2(-520, 400)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_m3uhn")
+nodes/fragment/6/position = Vector2(-540, 120)
+nodes/fragment/7/node = SubResource("VisualShaderNodeVectorCompose_rpli1")
+nodes/fragment/7/position = Vector2(-118.203, 154.142)
+nodes/fragment/8/node = SubResource("VisualShaderNodeUIntParameter_msuk3")
+nodes/fragment/8/position = Vector2(-520, 240)
+nodes/fragment/9/node = SubResource("VisualShaderNodeVectorOp_qpxtr")
+nodes/fragment/9/position = Vector2(332.218, 352.532)
+nodes/fragment/10/node = SubResource("VisualShaderNodeFloatParameter_xeeym")
+nodes/fragment/10/position = Vector2(20, 440)
+nodes/fragment/connections = PackedInt32Array(4, 0, 0, 0, 4, 0, 0, 4, 4, 0, 0, 2, 4, 0, 0, 3, 5, 0, 2, 2, 6, 1, 7, 0, 6, 2, 7, 1, 7, 0, 2, 0, 8, 0, 7, 2, 2, 0, 9, 0, 9, 0, 0, 5, 10, 0, 9, 1)
+nodes/light/2/node = SubResource("VisualShaderNodeFloatConstant_om18q")
+nodes/light/2/position = Vector2(140, 140)
+nodes/light/connections = PackedInt32Array(2, 0, 0, 0, 2, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u41eq"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_f5wfg")
+shader_parameter/ID = 2
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0nndg"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_f5wfg")
+shader_parameter/ID = 0
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("5_e2xtx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_clgi0"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("3_locon")
+shader_parameter/Offset = 0.001
+shader_parameter/EdgeWidth = 0.05
+shader_parameter/ColorParameter = Color(0.890196, 0.890196, 0.890196, 1)
+
+[sub_resource type="VisualShader" id="VisualShader_4m324"]
+resource_local_to_scene = true
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform uint ID;
+uniform sampler2DArray Texture2DArrayParameter;
+uniform float Gamma = 2.20000004768372;
+
+
+
+void fragment() {
+// FloatConstant:4
+	float n_out4p0 = 0.000000;
+
+
+// Input:6
+	vec2 n_out6p0 = UV;
+	float n_out6p1 = n_out6p0.r;
+	float n_out6p2 = n_out6p0.g;
+
+
+// UIntParameter:8
+	uint n_out8p0 = ID;
+
+
+// VectorCompose:7
+	vec3 n_out7p0 = vec3(n_out6p1, n_out6p2, float(n_out8p0));
+
+
+	vec4 n_out2p0;
+// Texture2DArray:2
+	n_out2p0 = texture(Texture2DArrayParameter, n_out7p0);
+
+
+// FloatParameter:10
+	float n_out10p0 = Gamma;
+
+
+// VectorOp:9
+	vec3 n_out9p0 = pow(vec3(n_out2p0.xyz), vec3(n_out10p0));
+
+
+// Output:0
+	ALBEDO = vec3(n_out4p0);
+	METALLIC = n_out4p0;
+	ROUGHNESS = n_out4p0;
+	SPECULAR = n_out4p0;
+	EMISSION = n_out9p0;
+
+
+}
+
+void light() {
+// FloatConstant:2
+	float n_out2p0 = 0.000000;
+
+
+// Output:0
+	DIFFUSE_LIGHT = vec3(n_out2p0);
+	SPECULAR_LIGHT = vec3(n_out2p0);
+
+
+}
+"
+nodes/fragment/0/position = Vector2(680, 140)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DArray_kk4if")
+nodes/fragment/2/position = Vector2(60, 240)
+nodes/fragment/4/node = SubResource("VisualShaderNodeFloatConstant_2kmjk")
+nodes/fragment/4/position = Vector2(60, 140)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture2DArrayParameter_kge7y")
+nodes/fragment/5/position = Vector2(-520, 400)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_m3uhn")
+nodes/fragment/6/position = Vector2(-540, 120)
+nodes/fragment/7/node = SubResource("VisualShaderNodeVectorCompose_rpli1")
+nodes/fragment/7/position = Vector2(-118.203, 154.142)
+nodes/fragment/8/node = SubResource("VisualShaderNodeUIntParameter_msuk3")
+nodes/fragment/8/position = Vector2(-520, 240)
+nodes/fragment/9/node = SubResource("VisualShaderNodeVectorOp_qpxtr")
+nodes/fragment/9/position = Vector2(332.218, 352.532)
+nodes/fragment/10/node = SubResource("VisualShaderNodeFloatParameter_xeeym")
+nodes/fragment/10/position = Vector2(20, 440)
+nodes/fragment/connections = PackedInt32Array(4, 0, 0, 0, 4, 0, 0, 4, 4, 0, 0, 2, 4, 0, 0, 3, 5, 0, 2, 2, 6, 1, 7, 0, 6, 2, 7, 1, 7, 0, 2, 0, 8, 0, 7, 2, 2, 0, 9, 0, 9, 0, 0, 5, 10, 0, 9, 1)
+nodes/light/2/node = SubResource("VisualShaderNodeFloatConstant_om18q")
+nodes/light/2/position = Vector2(140, 140)
+nodes/light/connections = PackedInt32Array(2, 0, 0, 0, 2, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xpenl"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_4m324")
+shader_parameter/ID = 3
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_30f0k"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_4m324")
+shader_parameter/ID = 0
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("5_e2xtx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6kh4q"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("3_locon")
+shader_parameter/Offset = 0.001
+shader_parameter/EdgeWidth = 0.05
+shader_parameter/ColorParameter = Color(0.890196, 0.890196, 0.890196, 1)
+
+[sub_resource type="VisualShader" id="VisualShader_aer3q"]
+resource_local_to_scene = true
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform uint ID;
+uniform sampler2DArray Texture2DArrayParameter;
+uniform float Gamma = 2.20000004768372;
+
+
+
+void fragment() {
+// FloatConstant:4
+	float n_out4p0 = 0.000000;
+
+
+// Input:6
+	vec2 n_out6p0 = UV;
+	float n_out6p1 = n_out6p0.r;
+	float n_out6p2 = n_out6p0.g;
+
+
+// UIntParameter:8
+	uint n_out8p0 = ID;
+
+
+// VectorCompose:7
+	vec3 n_out7p0 = vec3(n_out6p1, n_out6p2, float(n_out8p0));
+
+
+	vec4 n_out2p0;
+// Texture2DArray:2
+	n_out2p0 = texture(Texture2DArrayParameter, n_out7p0);
+
+
+// FloatParameter:10
+	float n_out10p0 = Gamma;
+
+
+// VectorOp:9
+	vec3 n_out9p0 = pow(vec3(n_out2p0.xyz), vec3(n_out10p0));
+
+
+// Output:0
+	ALBEDO = vec3(n_out4p0);
+	METALLIC = n_out4p0;
+	ROUGHNESS = n_out4p0;
+	SPECULAR = n_out4p0;
+	EMISSION = n_out9p0;
+
+
+}
+
+void light() {
+// FloatConstant:2
+	float n_out2p0 = 0.000000;
+
+
+// Output:0
+	DIFFUSE_LIGHT = vec3(n_out2p0);
+	SPECULAR_LIGHT = vec3(n_out2p0);
+
+
+}
+"
+nodes/fragment/0/position = Vector2(680, 140)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DArray_kk4if")
+nodes/fragment/2/position = Vector2(60, 240)
+nodes/fragment/4/node = SubResource("VisualShaderNodeFloatConstant_2kmjk")
+nodes/fragment/4/position = Vector2(60, 140)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture2DArrayParameter_kge7y")
+nodes/fragment/5/position = Vector2(-520, 400)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_m3uhn")
+nodes/fragment/6/position = Vector2(-540, 120)
+nodes/fragment/7/node = SubResource("VisualShaderNodeVectorCompose_rpli1")
+nodes/fragment/7/position = Vector2(-118.203, 154.142)
+nodes/fragment/8/node = SubResource("VisualShaderNodeUIntParameter_msuk3")
+nodes/fragment/8/position = Vector2(-520, 240)
+nodes/fragment/9/node = SubResource("VisualShaderNodeVectorOp_qpxtr")
+nodes/fragment/9/position = Vector2(332.218, 352.532)
+nodes/fragment/10/node = SubResource("VisualShaderNodeFloatParameter_xeeym")
+nodes/fragment/10/position = Vector2(20, 440)
+nodes/fragment/connections = PackedInt32Array(4, 0, 0, 0, 4, 0, 0, 4, 4, 0, 0, 2, 4, 0, 0, 3, 5, 0, 2, 2, 6, 1, 7, 0, 6, 2, 7, 1, 7, 0, 2, 0, 8, 0, 7, 2, 2, 0, 9, 0, 9, 0, 0, 5, 10, 0, 9, 1)
+nodes/light/2/node = SubResource("VisualShaderNodeFloatConstant_om18q")
+nodes/light/2/position = Vector2(140, 140)
+nodes/light/connections = PackedInt32Array(2, 0, 0, 0, 2, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pws62"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_aer3q")
+shader_parameter/ID = 4
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ixi5d"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_aer3q")
+shader_parameter/ID = 0
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("5_e2xtx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rbeht"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_f5wfg")
+shader_parameter/ID = 7
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y4euv"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_4m324")
+shader_parameter/ID = 8
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4p7kj"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_aer3q")
+shader_parameter/ID = 9
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5d3en"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_f5wfg")
+shader_parameter/ID = 12
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n5gno"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_4m324")
+shader_parameter/ID = 13
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t4n6u"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_aer3q")
+shader_parameter/ID = 14
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_px0k3"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_f5wfg")
+shader_parameter/ID = 17
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6wrvs"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_4m324")
+shader_parameter/ID = 18
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ri0db"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_aer3q")
+shader_parameter/ID = 19
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ebnp"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_f5wfg")
+shader_parameter/ID = 22
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2dvk"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_4m324")
+shader_parameter/ID = 23
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2yrpd"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_aer3q")
+shader_parameter/ID = 24
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m7xhw"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("3_locon")
+shader_parameter/Offset = 0.001
+shader_parameter/EdgeWidth = 0.05
+shader_parameter/ColorParameter = Color(0.890196, 0.890196, 0.890196, 1)
+
+[sub_resource type="VisualShader" id="VisualShader_5dlpi"]
+resource_local_to_scene = true
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform uint ID;
+uniform sampler2DArray Texture2DArrayParameter;
+uniform float Gamma = 2.20000004768372;
+
+
+
+void fragment() {
+// FloatConstant:4
+	float n_out4p0 = 0.000000;
+
+
+// Input:6
+	vec2 n_out6p0 = UV;
+	float n_out6p1 = n_out6p0.r;
+	float n_out6p2 = n_out6p0.g;
+
+
+// UIntParameter:8
+	uint n_out8p0 = ID;
+
+
+// VectorCompose:7
+	vec3 n_out7p0 = vec3(n_out6p1, n_out6p2, float(n_out8p0));
+
+
+	vec4 n_out2p0;
+// Texture2DArray:2
+	n_out2p0 = texture(Texture2DArrayParameter, n_out7p0);
+
+
+// FloatParameter:10
+	float n_out10p0 = Gamma;
+
+
+// VectorOp:9
+	vec3 n_out9p0 = pow(vec3(n_out2p0.xyz), vec3(n_out10p0));
+
+
+// Output:0
+	ALBEDO = vec3(n_out4p0);
+	METALLIC = n_out4p0;
+	ROUGHNESS = n_out4p0;
+	SPECULAR = n_out4p0;
+	EMISSION = n_out9p0;
+
+
+}
+
+void light() {
+// FloatConstant:2
+	float n_out2p0 = 0.000000;
+
+
+// Output:0
+	DIFFUSE_LIGHT = vec3(n_out2p0);
+	SPECULAR_LIGHT = vec3(n_out2p0);
+
+
+}
+"
+nodes/fragment/0/position = Vector2(680, 140)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DArray_kk4if")
+nodes/fragment/2/position = Vector2(60, 240)
+nodes/fragment/4/node = SubResource("VisualShaderNodeFloatConstant_2kmjk")
+nodes/fragment/4/position = Vector2(60, 140)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture2DArrayParameter_kge7y")
+nodes/fragment/5/position = Vector2(-520, 400)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_m3uhn")
+nodes/fragment/6/position = Vector2(-540, 120)
+nodes/fragment/7/node = SubResource("VisualShaderNodeVectorCompose_rpli1")
+nodes/fragment/7/position = Vector2(-118.203, 154.142)
+nodes/fragment/8/node = SubResource("VisualShaderNodeUIntParameter_msuk3")
+nodes/fragment/8/position = Vector2(-520, 240)
+nodes/fragment/9/node = SubResource("VisualShaderNodeVectorOp_qpxtr")
+nodes/fragment/9/position = Vector2(332.218, 352.532)
+nodes/fragment/10/node = SubResource("VisualShaderNodeFloatParameter_xeeym")
+nodes/fragment/10/position = Vector2(20, 440)
+nodes/fragment/connections = PackedInt32Array(4, 0, 0, 0, 4, 0, 0, 4, 4, 0, 0, 2, 4, 0, 0, 3, 5, 0, 2, 2, 6, 1, 7, 0, 6, 2, 7, 1, 7, 0, 2, 0, 8, 0, 7, 2, 2, 0, 9, 0, 9, 0, 0, 5, 10, 0, 9, 1)
+nodes/light/2/node = SubResource("VisualShaderNodeFloatConstant_om18q")
+nodes/light/2/position = Vector2(140, 140)
+nodes/light/connections = PackedInt32Array(2, 0, 0, 0, 2, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bn87v"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_5dlpi")
+shader_parameter/ID = 25
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c408g"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_5dlpi")
+shader_parameter/ID = 0
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("5_e2xtx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wgadk"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("3_locon")
+shader_parameter/Offset = 0.001
+shader_parameter/EdgeWidth = 0.05
+shader_parameter/ColorParameter = Color(0.890196, 0.890196, 0.890196, 1)
+
+[sub_resource type="VisualShader" id="VisualShader_jprbj"]
+resource_local_to_scene = true
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform uint ID;
+uniform sampler2DArray Texture2DArrayParameter;
+uniform float Gamma = 2.20000004768372;
+
+
+
+void fragment() {
+// FloatConstant:4
+	float n_out4p0 = 0.000000;
+
+
+// Input:6
+	vec2 n_out6p0 = UV;
+	float n_out6p1 = n_out6p0.r;
+	float n_out6p2 = n_out6p0.g;
+
+
+// UIntParameter:8
+	uint n_out8p0 = ID;
+
+
+// VectorCompose:7
+	vec3 n_out7p0 = vec3(n_out6p1, n_out6p2, float(n_out8p0));
+
+
+	vec4 n_out2p0;
+// Texture2DArray:2
+	n_out2p0 = texture(Texture2DArrayParameter, n_out7p0);
+
+
+// FloatParameter:10
+	float n_out10p0 = Gamma;
+
+
+// VectorOp:9
+	vec3 n_out9p0 = pow(vec3(n_out2p0.xyz), vec3(n_out10p0));
+
+
+// Output:0
+	ALBEDO = vec3(n_out4p0);
+	METALLIC = n_out4p0;
+	ROUGHNESS = n_out4p0;
+	SPECULAR = n_out4p0;
+	EMISSION = n_out9p0;
+
+
+}
+
+void light() {
+// FloatConstant:2
+	float n_out2p0 = 0.000000;
+
+
+// Output:0
+	DIFFUSE_LIGHT = vec3(n_out2p0);
+	SPECULAR_LIGHT = vec3(n_out2p0);
+
+
+}
+"
+nodes/fragment/0/position = Vector2(680, 140)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DArray_kk4if")
+nodes/fragment/2/position = Vector2(60, 240)
+nodes/fragment/4/node = SubResource("VisualShaderNodeFloatConstant_2kmjk")
+nodes/fragment/4/position = Vector2(60, 140)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture2DArrayParameter_kge7y")
+nodes/fragment/5/position = Vector2(-520, 400)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_m3uhn")
+nodes/fragment/6/position = Vector2(-540, 120)
+nodes/fragment/7/node = SubResource("VisualShaderNodeVectorCompose_rpli1")
+nodes/fragment/7/position = Vector2(-118.203, 154.142)
+nodes/fragment/8/node = SubResource("VisualShaderNodeUIntParameter_msuk3")
+nodes/fragment/8/position = Vector2(-520, 240)
+nodes/fragment/9/node = SubResource("VisualShaderNodeVectorOp_qpxtr")
+nodes/fragment/9/position = Vector2(332.218, 352.532)
+nodes/fragment/10/node = SubResource("VisualShaderNodeFloatParameter_xeeym")
+nodes/fragment/10/position = Vector2(20, 440)
+nodes/fragment/connections = PackedInt32Array(4, 0, 0, 0, 4, 0, 0, 4, 4, 0, 0, 2, 4, 0, 0, 3, 5, 0, 2, 2, 6, 1, 7, 0, 6, 2, 7, 1, 7, 0, 2, 0, 8, 0, 7, 2, 2, 0, 9, 0, 9, 0, 0, 5, 10, 0, 9, 1)
+nodes/light/2/node = SubResource("VisualShaderNodeFloatConstant_om18q")
+nodes/light/2/position = Vector2(140, 140)
+nodes/light/connections = PackedInt32Array(2, 0, 0, 0, 2, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ndoar"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_jprbj")
+shader_parameter/ID = 26
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oy2np"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_jprbj")
+shader_parameter/ID = 0
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("5_e2xtx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_voe63"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_f5wfg")
+shader_parameter/ID = 27
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tuhya"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_4m324")
+shader_parameter/ID = 28
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h6nkk"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_aer3q")
+shader_parameter/ID = 29
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jsnkf"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_5dlpi")
+shader_parameter/ID = 30
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_itjoo"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("3_locon")
+shader_parameter/Offset = 0.001
+shader_parameter/EdgeWidth = 0.05
+shader_parameter/ColorParameter = Color(0.890196, 0.890196, 0.890196, 1)
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_hy5mt"]
+parameter_name = "Gamma"
+default_value_enabled = true
+default_value = 2.2
+
+[sub_resource type="VisualShaderNodeTexture2DArray" id="VisualShaderNodeTexture2DArray_xdf1p"]
+source = 1
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_ly0lh"]
+
+[sub_resource type="VisualShaderNodeTexture2DArrayParameter" id="VisualShaderNodeTexture2DArrayParameter_y2lb5"]
+parameter_name = "Texture2DArrayParameter"
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_vlqqd"]
+expanded_output_ports = [0]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeVectorCompose" id="VisualShaderNodeVectorCompose_k1pbx"]
+
+[sub_resource type="VisualShaderNodeUIntParameter" id="VisualShaderNodeUIntParameter_3syiu"]
+parameter_name = "ID"
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_t27e3"]
+default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(2.2, 2.2, 2.2)]
+operator = 5
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_6k4x5"]
+
+[sub_resource type="VisualShader" id="VisualShader_bc7c0"]
+resource_local_to_scene = true
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform uint ID;
+uniform sampler2DArray Texture2DArrayParameter;
+uniform float Gamma = 2.20000004768372;
+
+
+
+void fragment() {
+// FloatConstant:4
+	float n_out4p0 = 0.000000;
+
+
+// Input:6
+	vec2 n_out6p0 = UV;
+	float n_out6p1 = n_out6p0.r;
+	float n_out6p2 = n_out6p0.g;
+
+
+// UIntParameter:8
+	uint n_out8p0 = ID;
+
+
+// VectorCompose:7
+	vec3 n_out7p0 = vec3(n_out6p1, n_out6p2, float(n_out8p0));
+
+
+	vec4 n_out2p0;
+// Texture2DArray:2
+	n_out2p0 = texture(Texture2DArrayParameter, n_out7p0);
+
+
+// FloatParameter:10
+	float n_out10p0 = Gamma;
+
+
+// VectorOp:9
+	vec3 n_out9p0 = pow(vec3(n_out2p0.xyz), vec3(n_out10p0));
+
+
+// Output:0
+	ALBEDO = vec3(n_out4p0);
+	METALLIC = n_out4p0;
+	ROUGHNESS = n_out4p0;
+	SPECULAR = n_out4p0;
+	EMISSION = n_out9p0;
+
+
+}
+
+void light() {
+// FloatConstant:2
+	float n_out2p0 = 0.000000;
+
+
+// Output:0
+	DIFFUSE_LIGHT = vec3(n_out2p0);
+	SPECULAR_LIGHT = vec3(n_out2p0);
+
+
+}
+"
+nodes/fragment/0/position = Vector2(680, 140)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DArray_xdf1p")
+nodes/fragment/2/position = Vector2(60, 240)
+nodes/fragment/4/node = SubResource("VisualShaderNodeFloatConstant_ly0lh")
+nodes/fragment/4/position = Vector2(60, 140)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture2DArrayParameter_y2lb5")
+nodes/fragment/5/position = Vector2(-520, 400)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_vlqqd")
+nodes/fragment/6/position = Vector2(-540, 120)
+nodes/fragment/7/node = SubResource("VisualShaderNodeVectorCompose_k1pbx")
+nodes/fragment/7/position = Vector2(-118.203, 154.142)
+nodes/fragment/8/node = SubResource("VisualShaderNodeUIntParameter_3syiu")
+nodes/fragment/8/position = Vector2(-520, 240)
+nodes/fragment/9/node = SubResource("VisualShaderNodeVectorOp_t27e3")
+nodes/fragment/9/position = Vector2(332.218, 352.532)
+nodes/fragment/10/node = SubResource("VisualShaderNodeFloatParameter_hy5mt")
+nodes/fragment/10/position = Vector2(20, 440)
+nodes/fragment/connections = PackedInt32Array(4, 0, 0, 0, 4, 0, 0, 4, 4, 0, 0, 2, 4, 0, 0, 3, 5, 0, 2, 2, 6, 1, 7, 0, 6, 2, 7, 1, 7, 0, 2, 0, 8, 0, 7, 2, 2, 0, 9, 0, 9, 0, 0, 5, 10, 0, 9, 1)
+nodes/light/2/node = SubResource("VisualShaderNodeFloatConstant_6k4x5")
+nodes/light/2/position = Vector2(140, 140)
+nodes/light/connections = PackedInt32Array(2, 0, 0, 0, 2, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jdx7g"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_bc7c0")
+shader_parameter/ID = null
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eouf3"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_bc7c0")
+shader_parameter/ID = 0
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("5_e2xtx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gjrgx"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_5dlpi")
+shader_parameter/ID = 5
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2kgr1"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_5dlpi")
+shader_parameter/ID = 10
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0yujr"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_5dlpi")
+shader_parameter/ID = 15
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ygeq"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_5dlpi")
+shader_parameter/ID = 20
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wntxj"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_jprbj")
+shader_parameter/ID = 1
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v5emv"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_jprbj")
+shader_parameter/ID = 6
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_odgqq"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_jprbj")
+shader_parameter/ID = 11
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t42b7"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_jprbj")
+shader_parameter/ID = 16
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_58bef"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("VisualShader_jprbj")
+shader_parameter/ID = 21
+shader_parameter/Gamma = 2.2
+shader_parameter/Texture2DArrayParameter = ExtResource("4_6u6wa")
+
+[node name="Deck_yaminomegami" node_paths=PackedStringArray("cardsRef") instance=ExtResource("1_8s7xj")]
+isShuffleAtStart = true
+cardsRef = [NodePath("Card_TumblingShot/Card_yaminomegami0"), NodePath("Card_ThroughShot/Card_yaminomegami1"), NodePath("Card_yaminomegami2"), NodePath("Card_yaminomegami3"), NodePath("Card_yaminomegami4"), NodePath("Card_TumblingShot/Card_yaminomegami5"), NodePath("Card_ThroughShot/Card_yaminomegami6"), NodePath("Card_yaminomegami7"), NodePath("Card_yaminomegami8"), NodePath("Card_yaminomegami9"), NodePath("Card_TumblingShot/Card_yaminomegami10"), NodePath("Card_ThroughShot/Card_yaminomegami11"), NodePath("Card_yaminomegami12"), NodePath("Card_yaminomegami13"), NodePath("Card_yaminomegami14"), NodePath("Card_TumblingShot/Card_yaminomegami15"), NodePath("Card_ThroughShot/Card_yaminomegami16"), NodePath("Card_yaminomegami17"), NodePath("Card_yaminomegami18"), NodePath("Card_yaminomegami19"), NodePath("Card_TumblingShot/Card_yaminomegami20"), NodePath("Card_ThroughShot/Card_yaminomegami21"), NodePath("Card_yaminomegami22"), NodePath("Card_yaminomegami23"), NodePath("Card_yaminomegami24"), NodePath("Card_yaminomegami25"), NodePath("Card_yaminomegami26"), NodePath("Card_yaminomegami27"), NodePath("Card_yaminomegami28"), NodePath("Card_yaminomegami29"), NodePath("Card_yaminomegami30"), NodePath("Card_yaminomegami31"), NodePath("Card_yaminomegami32"), NodePath("Card_yaminomegami33"), NodePath("Card_yaminomegami34")]
+
+[node name="Card_yaminomegami2" parent="." index="2" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.148957, 0, 0)
+cardName = "闪电箭"
+cardStar = 3
+cardStar_Re = 3
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami2/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_57eqn")
+
+[node name="Card_l_face" parent="Card_yaminomegami2" index="4"]
+material_override = SubResource("ShaderMaterial_u41eq")
+
+[node name="Card_l_back" parent="Card_yaminomegami2" index="5"]
+material_override = SubResource("ShaderMaterial_0nndg")
+
+[node name="Card_yaminomegami3" parent="." index="3" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.223783, 0, 0)
+cardName = "神眼"
+cardStar = 5
+cardStar_Re = 1
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami3/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_clgi0")
+
+[node name="Card_l_face" parent="Card_yaminomegami3" index="4"]
+material_override = SubResource("ShaderMaterial_xpenl")
+
+[node name="Card_l_back" parent="Card_yaminomegami3" index="5"]
+material_override = SubResource("ShaderMaterial_30f0k")
+
+[node name="Card_yaminomegami4" parent="." index="4" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295232, 0, 0)
+cardName = "移动射击"
+cardStar = 2
+cardStar_Re = 4
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami4/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_6kh4q")
+
+[node name="Card_l_face" parent="Card_yaminomegami4" index="4"]
+material_override = SubResource("ShaderMaterial_pws62")
+
+[node name="Card_l_back" parent="Card_yaminomegami4" index="5"]
+material_override = SubResource("ShaderMaterial_ixi5d")
+
+[node name="Card_yaminomegami7" parent="." index="5" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.148957, -0.103531, 0)
+cardName = "闪电箭"
+cardStar = 3
+cardStar_Re = 3
+cardElent = 2
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami7/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_57eqn")
+
+[node name="Card_l_face" parent="Card_yaminomegami7" index="4"]
+material_override = SubResource("ShaderMaterial_rbeht")
+
+[node name="Card_l_back" parent="Card_yaminomegami7" index="5"]
+material_override = SubResource("ShaderMaterial_0nndg")
+
+[node name="Card_yaminomegami8" parent="." index="6" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.223783, -0.102172, 0)
+cardName = "神眼"
+cardStar = 5
+cardStar_Re = 1
+cardElent = 2
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami8/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_clgi0")
+
+[node name="Card_l_face" parent="Card_yaminomegami8" index="4"]
+material_override = SubResource("ShaderMaterial_y4euv")
+
+[node name="Card_l_back" parent="Card_yaminomegami8" index="5"]
+material_override = SubResource("ShaderMaterial_30f0k")
+
+[node name="Card_yaminomegami9" parent="." index="7" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295232, -0.103412, 0)
+cardName = "移动射击"
+cardStar = 2
+cardStar_Re = 4
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami9/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_6kh4q")
+
+[node name="Card_l_face" parent="Card_yaminomegami9" index="4"]
+material_override = SubResource("ShaderMaterial_4p7kj")
+
+[node name="Card_l_back" parent="Card_yaminomegami9" index="5"]
+material_override = SubResource("ShaderMaterial_ixi5d")
+
+[node name="Card_yaminomegami12" parent="." index="8" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.148957, -0.210543, 0)
+cardName = "闪电箭"
+cardStar = 3
+cardStar_Re = 3
+cardElent = 4
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami12/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_57eqn")
+
+[node name="Card_l_face" parent="Card_yaminomegami12" index="4"]
+material_override = SubResource("ShaderMaterial_5d3en")
+
+[node name="Card_l_back" parent="Card_yaminomegami12" index="5"]
+material_override = SubResource("ShaderMaterial_0nndg")
+
+[node name="Card_yaminomegami13" parent="." index="9" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.223783, -0.209184, 0)
+cardName = "神眼"
+cardStar = 5
+cardStar_Re = 1
+cardElent = 4
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami13/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_clgi0")
+
+[node name="Card_l_face" parent="Card_yaminomegami13" index="4"]
+material_override = SubResource("ShaderMaterial_n5gno")
+
+[node name="Card_l_back" parent="Card_yaminomegami13" index="5"]
+material_override = SubResource("ShaderMaterial_30f0k")
+
+[node name="Card_yaminomegami14" parent="." index="10" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295232, -0.210424, 0)
+cardName = "移动射击"
+cardStar = 2
+cardStar_Re = 4
+cardElent = 4
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami14/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_6kh4q")
+
+[node name="Card_l_face" parent="Card_yaminomegami14" index="4"]
+material_override = SubResource("ShaderMaterial_t4n6u")
+
+[node name="Card_l_back" parent="Card_yaminomegami14" index="5"]
+material_override = SubResource("ShaderMaterial_ixi5d")
+
+[node name="Card_yaminomegami17" parent="." index="11" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.148957, -0.321499, 0)
+cardName = "闪电箭"
+cardStar = 3
+cardStar_Re = 3
+cardElent = 5
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami17/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_57eqn")
+
+[node name="Card_l_face" parent="Card_yaminomegami17" index="4"]
+material_override = SubResource("ShaderMaterial_px0k3")
+
+[node name="Card_l_back" parent="Card_yaminomegami17" index="5"]
+material_override = SubResource("ShaderMaterial_0nndg")
+
+[node name="Card_yaminomegami18" parent="." index="12" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.223783, -0.32014, 0)
+cardName = "神眼"
+cardStar = 5
+cardStar_Re = 1
+cardElent = 5
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami18/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_clgi0")
+
+[node name="Card_l_face" parent="Card_yaminomegami18" index="4"]
+material_override = SubResource("ShaderMaterial_6wrvs")
+
+[node name="Card_l_back" parent="Card_yaminomegami18" index="5"]
+material_override = SubResource("ShaderMaterial_30f0k")
+
+[node name="Card_yaminomegami19" parent="." index="13" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295232, -0.32138, 0)
+cardName = "移动射击"
+cardStar = 2
+cardStar_Re = 4
+cardElent = 5
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami19/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_6kh4q")
+
+[node name="Card_l_face" parent="Card_yaminomegami19" index="4"]
+material_override = SubResource("ShaderMaterial_ri0db")
+
+[node name="Card_l_back" parent="Card_yaminomegami19" index="5"]
+material_override = SubResource("ShaderMaterial_ixi5d")
+
+[node name="Card_yaminomegami22" parent="." index="14" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.148957, -0.433621, 0)
+cardName = "闪电箭"
+cardStar = 3
+cardStar_Re = 3
+cardElent = 3
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami22/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_57eqn")
+
+[node name="Card_l_face" parent="Card_yaminomegami22" index="4"]
+material_override = SubResource("ShaderMaterial_3ebnp")
+
+[node name="Card_l_back" parent="Card_yaminomegami22" index="5"]
+material_override = SubResource("ShaderMaterial_0nndg")
+
+[node name="Card_yaminomegami23" parent="." index="15" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.223783, -0.432262, 0)
+cardName = "神眼"
+cardStar = 5
+cardStar_Re = 1
+cardElent = 3
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami23/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_clgi0")
+
+[node name="Card_l_face" parent="Card_yaminomegami23" index="4"]
+material_override = SubResource("ShaderMaterial_h2dvk")
+
+[node name="Card_l_back" parent="Card_yaminomegami23" index="5"]
+material_override = SubResource("ShaderMaterial_30f0k")
+
+[node name="Card_yaminomegami24" parent="." index="16" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295232, -0.433502, 0)
+cardName = "移动射击"
+cardStar = 2
+cardStar_Re = 4
+cardElent = 3
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami24/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_6kh4q")
+
+[node name="Card_l_face" parent="Card_yaminomegami24" index="4"]
+material_override = SubResource("ShaderMaterial_2yrpd")
+
+[node name="Card_l_back" parent="Card_yaminomegami24" index="5"]
+material_override = SubResource("ShaderMaterial_ixi5d")
+
+[node name="Card_yaminomegami25" parent="." index="17" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.533458, 0)
+cardName = "暗灭"
+cardStar_Re = 1
+cardElent = 7
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami25/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_m7xhw")
+
+[node name="Card_l_face" parent="Card_yaminomegami25" index="4"]
+material_override = SubResource("ShaderMaterial_bn87v")
+
+[node name="Card_l_back" parent="Card_yaminomegami25" index="5"]
+material_override = SubResource("ShaderMaterial_c408g")
+
+[node name="Card_yaminomegami26" parent="." index="18" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0748608, -0.532599, 0)
+cardName = "暗灭"
+cardStar = 2
+cardStar_Re = 2
+cardElent = 7
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami26/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_wgadk")
+
+[node name="Card_l_face" parent="Card_yaminomegami26" index="4"]
+material_override = SubResource("ShaderMaterial_ndoar")
+
+[node name="Card_l_back" parent="Card_yaminomegami26" index="5"]
+material_override = SubResource("ShaderMaterial_oy2np")
+
+[node name="Card_yaminomegami27" parent="." index="19" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.148957, -0.533347, 0)
+cardName = "暗灭"
+cardStar = 3
+cardStar_Re = 3
+cardElent = 7
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami27/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_57eqn")
+
+[node name="Card_l_face" parent="Card_yaminomegami27" index="4"]
+material_override = SubResource("ShaderMaterial_voe63")
+
+[node name="Card_l_back" parent="Card_yaminomegami27" index="5"]
+material_override = SubResource("ShaderMaterial_0nndg")
+
+[node name="Card_yaminomegami28" parent="." index="20" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.223783, -0.531988, 0)
+cardName = "暗灭"
+cardStar = 4
+cardStar_Re = 4
+cardElent = 7
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami28/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_clgi0")
+
+[node name="Card_l_face" parent="Card_yaminomegami28" index="4"]
+material_override = SubResource("ShaderMaterial_tuhya")
+
+[node name="Card_l_back" parent="Card_yaminomegami28" index="5"]
+material_override = SubResource("ShaderMaterial_30f0k")
+
+[node name="Card_yaminomegami29" parent="." index="21" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295232, -0.533228, 0)
+cardName = "暗灭"
+cardStar = 5
+cardElent = 7
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami29/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_6kh4q")
+
+[node name="Card_l_face" parent="Card_yaminomegami29" index="4"]
+material_override = SubResource("ShaderMaterial_h6nkk")
+
+[node name="Card_l_back" parent="Card_yaminomegami29" index="5"]
+material_override = SubResource("ShaderMaterial_ixi5d")
+
+[node name="Card_yaminomegami30" parent="." index="22" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.637439, 0)
+cardName = "圣光"
+cardStar = 0
+cardStar_Re = -1
+cardBackType = 2
+cardElent = 6
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami30/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_m7xhw")
+
+[node name="Card_l_face" parent="Card_yaminomegami30" index="4"]
+material_override = SubResource("ShaderMaterial_jsnkf")
+
+[node name="Card_l_back" parent="Card_yaminomegami30" index="5"]
+material_override = SubResource("ShaderMaterial_c408g")
+
+[node name="Card_yaminomegami31" parent="." index="23" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0748608, -0.636579, 0)
+cardName = "圣光"
+cardStar = 0
+cardStar_Re = -1
+cardBackType = 2
+cardElent = 6
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami31/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_wgadk")
+
+[node name="Card_l_face" parent="Card_yaminomegami31" index="4"]
+material_override = SubResource("ShaderMaterial_jsnkf")
+
+[node name="Card_l_back" parent="Card_yaminomegami31" index="5"]
+material_override = SubResource("ShaderMaterial_oy2np")
+
+[node name="Card_yaminomegami32" parent="." index="24" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.148957, -0.637327, 0)
+cardName = "圣光"
+cardStar = 0
+cardStar_Re = -1
+cardBackType = 2
+cardElent = 6
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami32/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_57eqn")
+
+[node name="Card_l_face" parent="Card_yaminomegami32" index="4"]
+material_override = SubResource("ShaderMaterial_jsnkf")
+
+[node name="Card_l_back" parent="Card_yaminomegami32" index="5"]
+material_override = SubResource("ShaderMaterial_0nndg")
+
+[node name="Card_yaminomegami33" parent="." index="25" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.223783, -0.635968, 0)
+cardName = "圣光"
+cardStar = 0
+cardStar_Re = -1
+cardBackType = 2
+cardElent = 6
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami33/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_clgi0")
+
+[node name="Card_l_face" parent="Card_yaminomegami33" index="4"]
+material_override = SubResource("ShaderMaterial_jsnkf")
+
+[node name="Card_l_back" parent="Card_yaminomegami33" index="5"]
+material_override = SubResource("ShaderMaterial_30f0k")
+
+[node name="Card_yaminomegami34" parent="." index="26" instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295232, -0.637208, 0)
+cardName = "圣光"
+cardStar = 0
+cardStar_Re = -1
+cardBackType = 2
+cardElent = 6
+cardState = 8
+
+[node name="Card_l_face" parent="Card_yaminomegami34/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_6kh4q")
+
+[node name="Card_l_face" parent="Card_yaminomegami34" index="4"]
+material_override = SubResource("ShaderMaterial_jsnkf")
+
+[node name="Card_l_back" parent="Card_yaminomegami34" index="5"]
+material_override = SubResource("ShaderMaterial_ixi5d")
+
+[node name="Card_TumblingShot" type="Node3D" parent="." index="27"]
+
+[node name="CardEffect_TumblingShot1" type="Node" parent="Card_TumblingShot" index="0"]
+script = ExtResource("6_t61qx")
+effectLimit = 4
+effectTime = 5
+validCardState = 1
+effectType = 2
+
+[node name="CardEffect_TumblingShot2" type="Node" parent="Card_TumblingShot" index="1"]
+script = ExtResource("7_r56b0")
+effectTrun = 1
+effectTime = 2
+validCardState = 1
+
+[node name="Card_yaminomegami0" parent="Card_TumblingShot" index="2" node_paths=PackedStringArray("effectsOnLose", "effectsOnLeave") instance=ExtResource("2_1xsf4")]
+cardState = 8
+effectsOnLose = [NodePath("../CardEffect_TumblingShot2")]
+effectsOnLeave = [NodePath("../CardEffect_TumblingShot1")]
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami0/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_itjoo")
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami0" index="4"]
+material_override = SubResource("ShaderMaterial_jdx7g")
+
+[node name="Card_l_back" parent="Card_TumblingShot/Card_yaminomegami0" index="5"]
+material_override = SubResource("ShaderMaterial_eouf3")
+
+[node name="Card_yaminomegami5" parent="Card_TumblingShot" index="3" node_paths=PackedStringArray("effectsOnLose", "effectsOnLeave") instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.103643, 0)
+cardElent = 2
+cardState = 8
+effectsOnLose = [NodePath("../CardEffect_TumblingShot2")]
+effectsOnLeave = [NodePath("../CardEffect_TumblingShot1")]
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami5/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_m7xhw")
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami5" index="4"]
+material_override = SubResource("ShaderMaterial_gjrgx")
+
+[node name="Card_l_back" parent="Card_TumblingShot/Card_yaminomegami5" index="5"]
+material_override = SubResource("ShaderMaterial_c408g")
+
+[node name="Card_yaminomegami10" parent="Card_TumblingShot" index="4" node_paths=PackedStringArray("effectsOnLose", "effectsOnLeave") instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.210655, 0)
+cardElent = 4
+cardState = 8
+effectsOnLose = [NodePath("../CardEffect_TumblingShot2")]
+effectsOnLeave = [NodePath("../CardEffect_TumblingShot1")]
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami10/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_m7xhw")
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami10" index="4"]
+material_override = SubResource("ShaderMaterial_2kgr1")
+
+[node name="Card_l_back" parent="Card_TumblingShot/Card_yaminomegami10" index="5"]
+material_override = SubResource("ShaderMaterial_c408g")
+
+[node name="Card_yaminomegami15" parent="Card_TumblingShot" index="5" node_paths=PackedStringArray("effectsOnLose", "effectsOnLeave") instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.321611, 0)
+cardElent = 5
+cardState = 8
+effectsOnLose = [NodePath("../CardEffect_TumblingShot2")]
+effectsOnLeave = [NodePath("../CardEffect_TumblingShot1")]
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami15/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_m7xhw")
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami15" index="4"]
+material_override = SubResource("ShaderMaterial_0yujr")
+
+[node name="Card_l_back" parent="Card_TumblingShot/Card_yaminomegami15" index="5"]
+material_override = SubResource("ShaderMaterial_c408g")
+
+[node name="Card_yaminomegami20" parent="Card_TumblingShot" index="6" node_paths=PackedStringArray("effectsOnLose", "effectsOnLeave") instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.433732, 0)
+cardElent = 3
+cardState = 8
+effectsOnLose = [NodePath("../CardEffect_TumblingShot2")]
+effectsOnLeave = [NodePath("../CardEffect_TumblingShot1")]
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami20/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_m7xhw")
+
+[node name="Card_l_face" parent="Card_TumblingShot/Card_yaminomegami20" index="4"]
+material_override = SubResource("ShaderMaterial_6ygeq")
+
+[node name="Card_l_back" parent="Card_TumblingShot/Card_yaminomegami20" index="5"]
+material_override = SubResource("ShaderMaterial_c408g")
+
+[node name="Card_ThroughShot" type="Node3D" parent="." index="28"]
+
+[node name="CardEffect_ThroughShot" type="Node" parent="Card_ThroughShot" index="0"]
+script = ExtResource("8_p1ovx")
+effectTrun = 2
+effectTime = 7
+effectType = 2
+
+[node name="Card_yaminomegami1" parent="Card_ThroughShot" index="1" node_paths=PackedStringArray("effectsOnWin") instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0748608, 0, 0)
+cardName = "贯穿射击"
+cardStar = 4
+cardStar_Re = 1
+cardState = 8
+effectsOnWin = [NodePath("../CardEffect_ThroughShot")]
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami1/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_wgadk")
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami1" index="4"]
+material_override = SubResource("ShaderMaterial_wntxj")
+
+[node name="Card_l_back" parent="Card_ThroughShot/Card_yaminomegami1" index="5"]
+material_override = SubResource("ShaderMaterial_oy2np")
+
+[node name="Card_yaminomegami6" parent="Card_ThroughShot" index="2" node_paths=PackedStringArray("effectsOnWin") instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0748608, -0.102783, 0)
+cardName = "贯穿射击"
+cardStar = 4
+cardStar_Re = 1
+cardElent = 2
+cardState = 8
+effectsOnWin = [NodePath("../CardEffect_ThroughShot")]
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami6/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_wgadk")
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami6" index="4"]
+material_override = SubResource("ShaderMaterial_v5emv")
+
+[node name="Card_l_back" parent="Card_ThroughShot/Card_yaminomegami6" index="5"]
+material_override = SubResource("ShaderMaterial_oy2np")
+
+[node name="Card_yaminomegami11" parent="Card_ThroughShot" index="3" node_paths=PackedStringArray("effectsOnWin") instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0748608, -0.209795, 0)
+cardName = "贯穿射击"
+cardStar = 4
+cardStar_Re = 1
+cardElent = 4
+cardState = 8
+effectsOnWin = [NodePath("../CardEffect_ThroughShot")]
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami11/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_wgadk")
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami11" index="4"]
+material_override = SubResource("ShaderMaterial_odgqq")
+
+[node name="Card_l_back" parent="Card_ThroughShot/Card_yaminomegami11" index="5"]
+material_override = SubResource("ShaderMaterial_oy2np")
+
+[node name="Card_yaminomegami16" parent="Card_ThroughShot" index="4" node_paths=PackedStringArray("effectsOnWin") instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0748608, -0.320751, 0)
+cardName = "贯穿射击"
+cardStar = 4
+cardStar_Re = 1
+cardElent = 5
+cardState = 8
+effectsOnWin = [NodePath("../CardEffect_ThroughShot")]
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami16/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_wgadk")
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami16" index="4"]
+material_override = SubResource("ShaderMaterial_t42b7")
+
+[node name="Card_l_back" parent="Card_ThroughShot/Card_yaminomegami16" index="5"]
+material_override = SubResource("ShaderMaterial_oy2np")
+
+[node name="Card_yaminomegami21" parent="Card_ThroughShot" index="5" node_paths=PackedStringArray("effectsOnWin") instance=ExtResource("2_1xsf4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0748608, -0.432873, 0)
+cardName = "贯穿射击"
+cardStar = 4
+cardStar_Re = 1
+cardElent = 3
+cardState = 8
+effectsOnWin = [NodePath("../CardEffect_ThroughShot")]
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami21/CardHintInRange/HintModel" index="1"]
+material_override = SubResource("ShaderMaterial_wgadk")
+
+[node name="Card_l_face" parent="Card_ThroughShot/Card_yaminomegami21" index="4"]
+material_override = SubResource("ShaderMaterial_58bef")
+
+[node name="Card_l_back" parent="Card_ThroughShot/Card_yaminomegami21" index="5"]
+material_override = SubResource("ShaderMaterial_oy2np")
+
+[editable path="Card_yaminomegami2"]
+[editable path="Card_yaminomegami2/CardHintInRange"]
+[editable path="Card_yaminomegami2/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami3"]
+[editable path="Card_yaminomegami3/CardHintInRange"]
+[editable path="Card_yaminomegami3/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami4"]
+[editable path="Card_yaminomegami4/CardHintInRange"]
+[editable path="Card_yaminomegami4/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami7"]
+[editable path="Card_yaminomegami7/CardHintInRange"]
+[editable path="Card_yaminomegami7/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami8"]
+[editable path="Card_yaminomegami8/CardHintInRange"]
+[editable path="Card_yaminomegami8/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami9"]
+[editable path="Card_yaminomegami9/CardHintInRange"]
+[editable path="Card_yaminomegami9/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami12"]
+[editable path="Card_yaminomegami12/CardHintInRange"]
+[editable path="Card_yaminomegami12/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami13"]
+[editable path="Card_yaminomegami13/CardHintInRange"]
+[editable path="Card_yaminomegami13/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami14"]
+[editable path="Card_yaminomegami14/CardHintInRange"]
+[editable path="Card_yaminomegami14/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami17"]
+[editable path="Card_yaminomegami17/CardHintInRange"]
+[editable path="Card_yaminomegami17/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami18"]
+[editable path="Card_yaminomegami18/CardHintInRange"]
+[editable path="Card_yaminomegami18/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami19"]
+[editable path="Card_yaminomegami19/CardHintInRange"]
+[editable path="Card_yaminomegami19/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami22"]
+[editable path="Card_yaminomegami22/CardHintInRange"]
+[editable path="Card_yaminomegami22/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami23"]
+[editable path="Card_yaminomegami23/CardHintInRange"]
+[editable path="Card_yaminomegami23/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami24"]
+[editable path="Card_yaminomegami24/CardHintInRange"]
+[editable path="Card_yaminomegami24/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami25"]
+[editable path="Card_yaminomegami25/CardHintInRange"]
+[editable path="Card_yaminomegami25/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami26"]
+[editable path="Card_yaminomegami26/CardHintInRange"]
+[editable path="Card_yaminomegami26/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami27"]
+[editable path="Card_yaminomegami27/CardHintInRange"]
+[editable path="Card_yaminomegami27/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami28"]
+[editable path="Card_yaminomegami28/CardHintInRange"]
+[editable path="Card_yaminomegami28/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami29"]
+[editable path="Card_yaminomegami29/CardHintInRange"]
+[editable path="Card_yaminomegami29/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami30"]
+[editable path="Card_yaminomegami30/CardHintInRange"]
+[editable path="Card_yaminomegami30/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami31"]
+[editable path="Card_yaminomegami31/CardHintInRange"]
+[editable path="Card_yaminomegami31/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami32"]
+[editable path="Card_yaminomegami32/CardHintInRange"]
+[editable path="Card_yaminomegami32/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami33"]
+[editable path="Card_yaminomegami33/CardHintInRange"]
+[editable path="Card_yaminomegami33/CardHintInRange/HintModel"]
+[editable path="Card_yaminomegami34"]
+[editable path="Card_yaminomegami34/CardHintInRange"]
+[editable path="Card_yaminomegami34/CardHintInRange/HintModel"]
+[editable path="Card_TumblingShot/Card_yaminomegami0"]
+[editable path="Card_TumblingShot/Card_yaminomegami0/CardHintInRange"]
+[editable path="Card_TumblingShot/Card_yaminomegami0/CardHintInRange/HintModel"]
+[editable path="Card_TumblingShot/Card_yaminomegami5"]
+[editable path="Card_TumblingShot/Card_yaminomegami5/CardHintInRange"]
+[editable path="Card_TumblingShot/Card_yaminomegami5/CardHintInRange/HintModel"]
+[editable path="Card_TumblingShot/Card_yaminomegami10"]
+[editable path="Card_TumblingShot/Card_yaminomegami10/CardHintInRange"]
+[editable path="Card_TumblingShot/Card_yaminomegami10/CardHintInRange/HintModel"]
+[editable path="Card_TumblingShot/Card_yaminomegami15"]
+[editable path="Card_TumblingShot/Card_yaminomegami15/CardHintInRange"]
+[editable path="Card_TumblingShot/Card_yaminomegami15/CardHintInRange/HintModel"]
+[editable path="Card_TumblingShot/Card_yaminomegami20"]
+[editable path="Card_TumblingShot/Card_yaminomegami20/CardHintInRange"]
+[editable path="Card_TumblingShot/Card_yaminomegami20/CardHintInRange/HintModel"]
+[editable path="Card_ThroughShot/Card_yaminomegami1"]
+[editable path="Card_ThroughShot/Card_yaminomegami1/CardHintInRange"]
+[editable path="Card_ThroughShot/Card_yaminomegami1/CardHintInRange/HintModel"]
+[editable path="Card_ThroughShot/Card_yaminomegami6"]
+[editable path="Card_ThroughShot/Card_yaminomegami6/CardHintInRange"]
+[editable path="Card_ThroughShot/Card_yaminomegami6/CardHintInRange/HintModel"]
+[editable path="Card_ThroughShot/Card_yaminomegami11"]
+[editable path="Card_ThroughShot/Card_yaminomegami11/CardHintInRange"]
+[editable path="Card_ThroughShot/Card_yaminomegami11/CardHintInRange/HintModel"]
+[editable path="Card_ThroughShot/Card_yaminomegami16"]
+[editable path="Card_ThroughShot/Card_yaminomegami16/CardHintInRange"]
+[editable path="Card_ThroughShot/Card_yaminomegami16/CardHintInRange/HintModel"]
+[editable path="Card_ThroughShot/Card_yaminomegami21"]
+[editable path="Card_ThroughShot/Card_yaminomegami21/CardHintInRange"]
+[editable path="Card_ThroughShot/Card_yaminomegami21/CardHintInRange/HintModel"]

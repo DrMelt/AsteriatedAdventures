@@ -13,40 +13,27 @@ public partial class HandCards : CardArea
 	public override void _Ready()
 	{
 		base._Ready();
-
 	}
 
-	public override void _Process(double delta)
+	public override Transform3D GetTrans(int cardInd)
 	{
-		ShowCards();
-	}
-
-	void ShowCards()
-	{
-		if (cardsRef.Count < 1)
-		{
-			return;
-		}
 		float startZ = -intervalZ * (cardsRef.Count - 1) * 0.5f;
+		startZ += cardInd * intervalZ;
 		float startRadian = -intervalRadian * (cardsRef.Count - 1) * 0.5f;
+		startRadian += cardInd * intervalRadian;
 
-		for (int i = 0; i < cardsRef.Count; i++)
-		{
-			Transform3D trans = Transform3D.Identity;
-			trans = trans.Rotated(Vector3.Forward, startRadian);
-			Vector3 offset = radius * Vector3.Up.Rotated(Vector3.Forward, startRadian);
+		Transform3D trans = Transform3D.Identity;
 
-			offset += -Vector3.Forward * startZ;
-			trans = trans.Translated(offset);
 
-			trans = GlobalTransform * trans;
-			cardsRef[i].TargetTrans = trans;
+		trans = trans.Rotated(Vector3.Forward, startRadian);
+		Vector3 offset = radius * Vector3.Up.Rotated(Vector3.Forward, startRadian);
 
-			startZ += intervalZ;
-			startRadian += intervalRadian;
-		}
+		offset += -Vector3.Forward * startZ;
+		trans = trans.Translated(offset);
+
+		trans = GlobalTransform * trans;
+		return trans;
 	}
-
 
 	public override int CardNum()
 	{

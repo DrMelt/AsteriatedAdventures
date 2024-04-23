@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Threading;
 
 public partial class CardPos : CardArea
 {
@@ -11,31 +10,29 @@ public partial class CardPos : CardArea
 	bool showHint = false;
 
 	[Export]
-	Vector3 posOffset = new Vector3(0, 0, 0.001f);
+	Vector3 posOffset_mm = new Vector3(0, 0, 0.5f);
 
 
 	public bool ShowHint { get => showHint; set { showHint = value; cardHintRef.Visible = showHint; } }
 
-	public Transform3D GetTrans(int cardInd)
+	public override Transform3D GetTrans(int cardInd)
 	{
 		Transform3D trans = GlobalTransform;
 
-		for (int i = 1; i < cardInd; i++)
-		{
-			trans = trans.Translated(GlobalTransform * posOffset);
-		}
+		trans = trans.Translated(GlobalBasis * (cardInd * posOffset_mm * 0.001f));
 
 		return trans;
 	}
 
-
-	public void MouseEnter()
+	public override void _Ready()
 	{
-
+		base._Ready();
 	}
 
-	public void MouseExit()
+	public override void _Process(double delta)
 	{
-
+		base._Process(delta);
+		cardHintRef.Visible = gameControlRef.IsValidCardArea(this);
 	}
+
 }

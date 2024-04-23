@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bd1nq2yfknqae"]
+[gd_scene load_steps=19 format=3 uid="uid://bd1nq2yfknqae"]
 
 [ext_resource type="Script" path="res://game/scenes/game_scene/GameControl.cs" id="1_1ayof"]
 [ext_resource type="PackedScene" uid="uid://cq3sk8v5s4o0l" path="res://game/objects/UI/counter.tscn" id="1_3cnxy"]
@@ -8,21 +8,31 @@
 [ext_resource type="PackedScene" uid="uid://dmybs7v131url" path="res://game/objects/HandCards/hand_cards.tscn" id="3_i3dfh"]
 [ext_resource type="Texture2D" uid="uid://23gvbgsfucd3" path="res://game/objects/Panels/Textures/redReS.png" id="5_epex1"]
 [ext_resource type="PackedScene" uid="uid://80x82mpy2fr4" path="res://game/objects/Panels/re_panel.tscn" id="5_w6eol"]
-[ext_resource type="PackedScene" uid="uid://bmwq7116brug0" path="res://game/objects/Cards/Base/CardPos.tscn" id="6_qw3sk"]
 [ext_resource type="Texture2D" uid="uid://gnvdn6hvxfes" path="res://game/objects/UI/Textures/Fragment4_back.png" id="8_nf6sj"]
+[ext_resource type="PackedScene" uid="uid://drp3n4uby60ft" path="res://game/objects/Cards/yaminomegami/deck_yaminomegami.tscn" id="8_sj4g0"]
 [ext_resource type="Theme" uid="uid://df6gcfrh57a7v" path="res://game/objects/UI/ui_theme.tres" id="9_1g66k"]
+[ext_resource type="PackedScene" uid="uid://bmwq7116brug0" path="res://game/objects/Cards/Base/CardPos.tscn" id="9_arom5"]
+[ext_resource type="Script" path="res://game/objects/UI/ShowState.cs" id="10_g3dd4"]
 [ext_resource type="Script" path="res://game/objects/UI/ShowDeckNum.cs" id="10_menw8"]
 [ext_resource type="Script" path="res://game/objects/UI/FragmentsNumCounter.cs" id="12_32dk5"]
+[ext_resource type="Script" path="res://game/scenes/game_scene/CallInit.cs" id="15_0epma"]
+[ext_resource type="Script" path="res://game/objects/UI/Button_ToNext.cs" id="15_4wmqo"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5y81f"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [node name="GameScene" type="Node3D"]
 
-[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("playersRef", "decksRef")]
+[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("playersRef", "centerPanelRef", "rePanelRef", "handsRef", "decksRef", "discardPileRef")]
 script = ExtResource("1_ovr5c")
+gameState = 6
 playersRef = [NodePath("../Players/PlayerData1"), NodePath("../Players/PlayerData2")]
-decksRef = [NodePath("../Decks/Deck1"), NodePath("../Decks/Deck2")]
+centerPanelRef = NodePath("../Center/Panel")
+rePanelRef = [NodePath("../Center/RePanel1"), NodePath("../Center/RePanel2")]
+handsRef = [NodePath("../Hands/HandCards1"), NodePath("../Hands/HandCards2")]
+decksRef = [NodePath("../Decks/DeckPos1/Deck_yaminomegami"), NodePath("../Decks/DeckPos2/Deck_yaminomegami")]
+discardPileRef = [NodePath("../DiscardPiles/CardPos1"), NodePath("../DiscardPiles/CardPos2")]
+turnPlayerId = 0
 
 [node name="Players" type="Node" parent="."]
 
@@ -34,14 +44,10 @@ script = ExtResource("3_d2dx8")
 
 [node name="GameControl" type="Node" parent="." node_paths=PackedStringArray("rayCastRef")]
 script = ExtResource("1_1ayof")
-rayCastRef = NodePath("../Camera3D/RayCast3D")
+dragDistance = 0.28
+rayCastRef = NodePath("RayCast3D")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-keep_aspect = 0
-fov = 60.0
-near = 0.005
-
-[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
+[node name="RayCast3D" type="RayCast3D" parent="GameControl"]
 enabled = false
 target_position = Vector3(0, 0, -1)
 collision_mask = 768
@@ -66,24 +72,36 @@ transform = Transform3D(0.93, 0, 0, 0, 0.93, 0, 0, 0, 0.93, 0, 0, -0.746889)
 [node name="Hands" type="Node3D" parent="."]
 
 [node name="HandCards1" parent="Hands" instance=ExtResource("3_i3dfh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.67054, -0.55)
-radius = 0.5
-intervalRadian = 0.08
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.952289, -0.55)
 
 [node name="HandCards2" parent="Hands" instance=ExtResource("3_i3dfh")]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.671, -0.55)
-radius = 0.5
-intervalRadian = 0.08
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.952, -0.55)
 
 [node name="Decks" type="Node3D" parent="."]
 
-[node name="Deck1" parent="Decks" instance=ExtResource("6_qw3sk")]
+[node name="DeckPos1" type="Node3D" parent="Decks"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.360226, -0.0584329, -0.753081)
 
-[node name="Deck2" parent="Decks" instance=ExtResource("6_qw3sk")]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0.360684, 0.058, -0.753)
+[node name="Deck_yaminomegami" parent="Decks/DeckPos1" instance=ExtResource("8_sj4g0")]
+ownerId = 0
 
-[node name="Game" type="Control" parent="."]
+[node name="DeckPos2" type="Node3D" parent="Decks"]
+transform = Transform3D(-1, 1.50996e-07, 0, -1.50996e-07, -1, 0, 0, 0, 1, 0.360684, 0.058, -0.753)
+
+[node name="Deck_yaminomegami" parent="Decks/DeckPos2" instance=ExtResource("8_sj4g0")]
+ownerId = 1
+
+[node name="DiscardPiles" type="Node3D" parent="."]
+
+[node name="CardPos1" parent="DiscardPiles" instance=ExtResource("9_arom5")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.244753, -0.0702574, -0.744532)
+areaName = 4
+
+[node name="CardPos2" parent="DiscardPiles" instance=ExtResource("9_arom5")]
+transform = Transform3D(1, 8.74228e-08, -8.74228e-08, 8.74228e-08, -1, 0, -8.74228e-08, -7.64274e-15, -1, -0.245, 0.07, -0.745)
+areaName = 4
+
+[node name="GameUI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,7 +109,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Back" type="Panel" parent="Game"]
+[node name="Back" type="Panel" parent="GameUI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -100,27 +118,28 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_5y81f")
 
-[node name="DecksCounter" type="Control" parent="Game/Back"]
+[node name="DecksCounter" type="Control" parent="GameUI/Back"]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Counter1" type="Label" parent="Game/Back/DecksCounter"]
+[node name="Counter1" type="Label" parent="GameUI/Back/DecksCounter"]
 layout_mode = 0
-offset_left = 981.0
+offset_left = 951.0
 offset_top = 383.0
-offset_right = 1021.0
+offset_right = 991.0
 offset_bottom = 425.0
 theme = ExtResource("9_1g66k")
 theme_override_font_sizes/font_size = 30
 text = "0"
 script = ExtResource("10_menw8")
+deckInd = 0
 
-[node name="Counter2" type="Label" parent="Game/Back/DecksCounter"]
+[node name="Counter2" type="Label" parent="GameUI/Back/DecksCounter"]
 layout_mode = 0
-offset_left = 981.0
+offset_left = 951.0
 offset_top = 229.0
-offset_right = 1021.0
+offset_right = 991.0
 offset_bottom = 271.0
 theme = ExtResource("9_1g66k")
 theme_override_font_sizes/font_size = 30
@@ -128,37 +147,75 @@ text = "0"
 script = ExtResource("10_menw8")
 deckInd = 1
 
-[node name="FragmentCounter" type="Control" parent="Game/Back"]
+[node name="FragmentCounter" type="Control" parent="GameUI/Back"]
 anchors_preset = 0
 offset_left = 169.0
 offset_top = 258.0
 offset_right = 209.0
 offset_bottom = 298.0
 
-[node name="TextureRect" type="TextureRect" parent="Game/Back/FragmentCounter"]
+[node name="TextureRect" type="TextureRect" parent="GameUI/Back/FragmentCounter"]
 layout_mode = 0
-offset_left = -11.0
+offset_left = -125.0
 offset_top = -8.0
-offset_right = 47.0
+offset_right = -67.0
 offset_bottom = 78.0
 texture = ExtResource("8_nf6sj")
 expand_mode = 1
 
-[node name="Label" type="Label" parent="Game/Back/FragmentCounter"]
+[node name="Label" type="Label" parent="GameUI/Back/FragmentCounter"]
 layout_mode = 0
-offset_left = 52.0
+offset_left = -62.0
 offset_top = 20.0
-offset_right = 92.0
-offset_bottom = 43.0
+offset_right = -22.0
+offset_bottom = 48.0
 theme = ExtResource("9_1g66k")
 theme_override_font_sizes/font_size = 20
 text = "30"
 script = ExtResource("12_32dk5")
 
-[node name="CounterArea1" parent="Game/Back" instance=ExtResource("1_3cnxy")]
-offset_top = 436.0
-offset_bottom = 476.0
+[node name="CounterArea2" parent="GameUI/Back" instance=ExtResource("1_3cnxy")]
+playerId = 1
 
-[node name="CounterArea2" parent="Game/Back" instance=ExtResource("1_3cnxy")]
+[node name="CounterArea1" parent="GameUI/Back" instance=ExtResource("1_3cnxy")]
+offset_top = 438.0
+offset_bottom = 478.0
+playerId = 0
 
+[node name="StateUI" type="Control" parent="GameUI/Back"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ShowState" type="Label" parent="GameUI/Back/StateUI"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 345.0
+offset_right = 156.0
+offset_bottom = 423.0
+theme = ExtResource("9_1g66k")
+theme_override_font_sizes/font_size = 22
+text = "State"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 1
+clip_text = true
+text_overrun_behavior = 1
+script = ExtResource("10_g3dd4")
+
+[node name="Button_EndAction" type="Button" parent="GameUI/Back/StateUI"]
+layout_mode = 0
+offset_left = 862.0
+offset_top = 302.0
+offset_right = 946.0
+offset_bottom = 337.0
+theme = ExtResource("9_1g66k")
+theme_override_font_sizes/font_size = 19
+text = "结束行动"
+script = ExtResource("15_4wmqo")
+
+[node name="CallInit" type="Node" parent="."]
+script = ExtResource("15_0epma")
+
+[editable path="Center/RePanel1"]
 [editable path="Center/RePanel2"]

@@ -3,8 +3,6 @@ using System;
 
 public partial class FragmentsNumCounter : LabelInGameBase
 {
-
-
 	public override void _Ready()
 	{
 		base._Ready();

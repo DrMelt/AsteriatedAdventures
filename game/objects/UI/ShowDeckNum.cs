@@ -4,15 +4,14 @@ using System;
 public partial class ShowDeckNum : LabelInGameBase
 {
 	[Export]
-	int deckInd = 0;
-
+	PlayerId deckInd = PlayerId.None;
 
 	CardArea deck = null;
 
 	public override void _Ready()
 	{
 		base._Ready();
-		deck = gameManagerRef.DecksRef[deckInd];
+		deck = gameManagerRef.GetDecksRef(deckInd);
 	}
 
 	public override void _Process(double delta)

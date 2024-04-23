@@ -7,13 +7,13 @@
 transparency = 1
 albedo_color = Color(1, 1, 1, 0)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7sm7j"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6tyt5"]
 resource_local_to_scene = true
 render_priority = 1
 shader = ExtResource("2_subm7")
 shader_parameter/Offset = 0.002
 shader_parameter/EdgeWidth = 0.05
-shader_parameter/ColorParameter = Color(0.909804, 0.827451, 0.701961, 1)
+shader_parameter/ColorParameter = Color(0.886275, 0.890196, 0.784314, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rrkkw"]
 transparency = 1
@@ -28,7 +28,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.00075048)
 material_override = SubResource("StandardMaterial3D_2db77")
 
 [node name="Card_l_face" parent="HintModel" index="1"]
-material_override = SubResource("ShaderMaterial_7sm7j")
+material_override = SubResource("ShaderMaterial_6tyt5")
 
 [node name="Card_l_back" parent="HintModel" index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00025373)

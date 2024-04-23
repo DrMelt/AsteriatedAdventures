@@ -1,19 +1,25 @@
-[gd_scene load_steps=3 format=3 uid="uid://80x82mpy2fr4"]
+[gd_scene load_steps=4 format=3 uid="uid://80x82mpy2fr4"]
 
+[ext_resource type="Script" path="res://game/objects/Panels/RePanel.cs" id="1_2sjqy"]
 [ext_resource type="Texture2D" uid="uid://dfuekckdl3i21" path="res://game/objects/Panels/Textures/blueReS.png" id="1_u6v6u"]
 [ext_resource type="PackedScene" uid="uid://bmwq7116brug0" path="res://game/objects/Cards/Base/CardPos.tscn" id="2_o3q33"]
 
 [node name="RePanel" type="Node3D"]
+script = ExtResource("1_2sjqy")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00439727)
 pixel_size = 0.0002
 texture = ExtResource("1_u6v6u")
 
 [node name="Re1" parent="." instance=ExtResource("2_o3q33")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0861716, 0.0305367, 0)
+areaName = 3
 
 [node name="Re2" parent="." instance=ExtResource("2_o3q33")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00158959, 0.0300623, 0)
+areaName = 3
 
 [node name="Re3" parent="." instance=ExtResource("2_o3q33")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0868562, 0.0302653, 0)
+areaName = 3
